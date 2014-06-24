@@ -76,6 +76,8 @@ function initialize() {
 			
 			if (data.kekkai[i].manga_is_kekkai == 'Yes') {
 				
+				//if this was a kekkai in the manga, create marker
+				
 				var name = data.kekkai[i].name;
 				var name_japanese = data.kekkai[i].name_japanese;
 				var name_romanji = data.kekkai[i].name_romanji;
@@ -83,27 +85,91 @@ function initialize() {
 				var longitude = data.kekkai[i].longitude;
 				var manga_destroyed = data.kekkai[i].manga_destroyed;
 				var manga_attacked_by = data.kekkai[i].manga_attacked_by;
+				
+				
+				
 				var information = data.kekkai[i].information;
 				
-				var html='<h2>'+name+'</h2>\
-					<4>'+name_japanese+'</h4>';
+				var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
+				
+				var html='';
+				
+				
+				/*
+				Intento de agregar imagenes Flickr, como que no las busca hasta el final, así que no las pone
+				------------------------
+				
+				//Flickr
+				//llamada a la api de flickr
+				var flickrtxt=name;
+				console.log('flickr searc: '+flickrtxt);
+				var apikey="803c9828d52e6a1bb961e9d8b337caa1"; //cambiar por la vuestra
+				
+				$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+apikey+"&text="+flickrtxt+"&per_page=1&sort=interestingness-desc&has_geo=1&extras=url_m&format=json&nojsoncallback=1",
+				function(data){
+					$.each(data.photos.photo, function(i,item) {
+						var flickrimg="<img width='200' src='"+item.url_m+"' />";
+
+						html=+flickrimg;
+						console.log(name+': '+flickrimg);
+					});
+				});
+				
+				*/
+	
+	
+	
+	
+				//como no funciona flickr, uso imagenes bajadas	
+				html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
+				
+				html += '<div style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
 				
 				if (manga_destroyed == 'Yes') {
-					var attacked = 'and destroyed ';
-					console.log(name+' was destroyed!');
+					var destroyed_status = 'and destroyed ';
+					//console.log(name+' was destroyed!');
 				} else {
-					var attacked = 'but not destroyed ';
-					console.log(name+' was NOT destroyed!');
+					var destroyed_status  = 'but not destroyed ';
+					//console.log(name+' was NOT destroyed!');
 				}
 				
 				if (manga_attacked_by !== undefined) {
 					
-					html += '<p>Attacked '+attacked+'by '+manga_attacked_by+'.';
-					console.log(name+' was attacked by '+manga_attacked_by);
+					//split array into string
+					var attacking_dragons = manga_attacked_by.split(", ");
+					
+					//how many values in string
+					var n = attacking_dragons.length;
+					
+					//counter
+					var d = 1;
+					
+					html += '<p>Attacked '+destroyed_status+'by ';
+					
+					for (var dragon in attacking_dragons) {
+						
+						html += '<a class="more doe" href="#'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
+						
+						if (n > 1 && d < n - 1 ) {
+							//if multiple attackers, and this is not the second to last on the list, add comma
+							html +=', ';
+						} else if (n > 1 && d == n - 1 ) {
+							//if multiple attackers, and this is the second to last on the list, add 'and'
+							html +=' and ';
+						}
+						
+						//update counter
+						d++;
+					}
+					
+					html += '.';
+					
 				} else {
-					html += '<p>Was never attacked.';
+					html += '<p>Has not been attacked.';
 					console.log(name+' was NOT attacked!');
 				}
+				
+				html += '</div>';
 				
 				if (name == 'Ebisu Garden Place') {
 					var marker='frog.png';
@@ -121,6 +187,8 @@ function initialize() {
 				
 				console.log(name+' is a kekkai in the manga!');
 				
+				
+				
 			} else {
 				console.log('__'+data.kekkai[i].name+' is NOT a kekkai in the manga!');
 			}
@@ -135,6 +203,10 @@ function initialize() {
 	/*		
 		}
 	);*/
+
+
+	
+
 	
 	$("#select-kekkai a").click(
 		function(event){
@@ -226,6 +298,7 @@ function selectKekkai(selectedKekkai) {
 }
 
 
+
 //crea un marker con una burbuja de texto, y una imagen personalizada
 function createMarker(map,point,image,txt) {
 
@@ -246,8 +319,13 @@ function createMarker(map,point,image,txt) {
 
 	});
 
-
 	return marker;
 }
 
+//click on infobox links
+	$('#kekkai-map').on("click",'.more', function(e) {
+		e.preventDefault();
+		console.log('go to info');
+	});
+	
 
