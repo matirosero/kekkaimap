@@ -68,7 +68,7 @@ function initialize() {
 	});
 	
 	
-	getKekkai('tv');
+	getKekkai(manga);
 
 
 	/*		
@@ -95,139 +95,142 @@ function initialize() {
 }
 
 
-function getKekkai(kekkaiSource) {
-	
-	console.log('kekkai source is '+kekkaiSource);
+function getKekkai(getFrom) {
 	
 	$.getJSON("kekkai.json",function(data){ //funcion con los datos leidos = ultimo parametro
 				//lo de arriba es un callback function, se pone como ultimo parametro
 		
-		var shownKekkaiIndex = [];
-		var indexKekkai = 0;
-		var myKekkai = [];
-		
 		for (var i in data.kekkai) {
+			
+			var name = data.kekkai[i].name;
+			var name_japanese = data.kekkai[i].name_japanese;
+			var name_romanji = data.kekkai[i].name_romanji;
+			var latitude = data.kekkai[i].latitude;
+			var longitude = data.kekkai[i].longitude;
+			var manga_destroyed = data.kekkai[i].manga_destroyed;
+			var manga_attacked_by = data.kekkai[i].manga_attacked_by;
+			var tv_destroyed = data.kekkai[i].tv_destroyed;
+			var tv_attacked_by = data.kekkai[i].tv_attacked_by;
+			var movie_destroyed = data.kekkai[i].movie_destroyed;
+			var movie_attacked_by = data.kekkai[i].movie_attacked_by;
+				
+						
+			var information = data.kekkai[i].information;
+				
+			var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
 
-			if (kekkaiSource == 'manga' && data.kekkai[i].manga_is_kekkai == 'Yes') {
+
+			if (data.kekkai[i].manga_is_kekkai == 'Yes') {
 				
 				//if this was a kekkai in the manga, create marker
 				
-				console.log(data.kekkai[i].name+' is a kekkai in the manga with ID '+indexKekkai);
-				shownKekkaiIndex.push(indexKekkai);
-				console.log('new array of kekkai: '+shownKekkaiIndex);
-				//data.kekkai[i].push(myKekkai);
 				
-			} else if (kekkaiSource == 'tv' && data.kekkai[i].tv_is_kekkai == 'Yes') {
-				shownKekkaiIndex.push(indexKekkai);
-			} else if (kekkaiSource == 'movie' && data.kekkai[i].movie_is_kekkai == 'Yes') {
-				shownKekkaiIndex.push(indexKekkai);
-			} 
+				var html='';
+				
+				
+				/*
+				Intento de agregar imagenes Flickr, como que no las busca hasta el final, así que no las pone
+				------------------------
+				
+				//Flickr
+				//llamada a la api de flickr
+				var flickrtxt=name;
+				console.log('flickr searc: '+flickrtxt);
+				var apikey="803c9828d52e6a1bb961e9d8b337caa1"; //cambiar por la vuestra
+				
+				$.getJSON("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+apikey+"&text="+flickrtxt+"&per_page=1&sort=interestingness-desc&has_geo=1&extras=url_m&format=json&nojsoncallback=1",
+				function(data){
+					$.each(data.photos.photo, function(i,item) {
+						var flickrimg="<img width='200' src='"+item.url_m+"' />";
+
+						html=+flickrimg;
+						console.log(name+': '+flickrimg);
+					});
+				});
+				
+				*/
+	
+	
+	
+	
+				//como no funciona flickr, uso imagenes bajadas	
+				html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
+				
+				html += '<div style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
+				
+				if (manga_destroyed == 'Yes') {
+					var destroyed_status = 'and destroyed ';
+					//console.log(name+' was destroyed!');
+				} else {
+					var destroyed_status  = 'but not destroyed ';
+					//console.log(name+' was NOT destroyed!');
+				}
+				
+				if (manga_attacked_by !== undefined) {
+					
+					//split array into string
+					var attacking_dragons = manga_attacked_by.split(", ");
+					
+					//how many values in string
+					var n = attacking_dragons.length;
+					
+					//counter
+					var d = 1;
+					
+					html += '<p>Attacked '+destroyed_status+'by ';
+					
+					for (var dragon in attacking_dragons) {
+						
+						html += '<a class="more doe" href="#'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
+						
+						if (n > 1 && d < n - 1 ) {
+							//if multiple attackers, and this is not the second to last on the list, add comma
+							html +=', ';
+						} else if (n > 1 && d == n - 1 ) {
+							//if multiple attackers, and this is the second to last on the list, add 'and'
+							html +=' and ';
+						}
+						
+						//update counter
+						d++;
+					}
+					
+					html += '.';
+					
+				} else {
+					html += '<p>Has not been attacked.';
+					console.log(name+' was NOT attacked!');
+				}
+				
+				html += '</div>';
+				
+				if (name == 'Ebisu Garden Place') {
+					var marker='frog.png';
+				} else {
+					var marker='blue-dragon.png';
+				}
+				
+				
+				
+				createMarker(kekkaiMap,new google.maps.LatLng(
+					latitude,
+					longitude),
+					marker,
+					html);
+				
+				console.log(name+' is a kekkai in the manga!');
+				
+				
+				
+			} else {
+				console.log('__'+data.kekkai[i].name+' is NOT a kekkai in the manga!');
+			}
 			
-			indexKekkai++;
 			
 			
 			//console.log(name+'/'+name_japanese+': '+latitude+', '+longitude);
 					
 		}
-		
-		console.log('FINAL array of kekkai: '+shownKekkaiIndex);
-		
-		for (var k in shownKekkaiIndex) {
-			console.log('index: '+shownKekkaiIndex[k]);
-			
-			var selectedIndexKekkai = shownKekkaiIndex[k]
-			console.log('name: '+data.kekkai[shownKekkaiIndex[k]].name);
-			
-			var name = data.kekkai[selectedIndexKekkai].name;
-			var name_japanese = data.kekkai[selectedIndexKekkai].name_japanese;
-			var name_romanji = data.kekkai[selectedIndexKekkai].name_romanji;
-			var latitude = data.kekkai[selectedIndexKekkai].latitude;
-			var longitude = data.kekkai[selectedIndexKekkai].longitude;
-			var manga_destroyed = data.kekkai[selectedIndexKekkai].manga_destroyed;
-			var manga_attacked_by = data.kekkai[selectedIndexKekkai].manga_attacked_by;
-			var tv_destroyed = data.kekkai[selectedIndexKekkai].tv_destroyed;
-			var tv_attacked_by = data.kekkai[selectedIndexKekkai].tv_attacked_by;
-			var movie_destroyed = data.kekkai[selectedIndexKekkai].movie_destroyed;
-			var movie_attacked_by = data.kekkai[selectedIndexKekkai].movie_attacked_by;
-				
-						
-			var information = data.kekkai[selectedIndexKekkai].information;
-				
-			
-
-			var html='';
-			
-			//como no funciona flickr, uso imagenes bajadas	
-			var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-			html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
-				
-			html += '<div style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
-				
-			if ((kekkaiSource == 'manga' && manga_destroyed == 'Yes') || (kekkaiSource == 'tv' && tv_destroyed == 'Yes') || (kekkaiSource == 'movie' && movie_destroyed == 'Yes')) {
-				var destroyed_status = 'and destroyed ';
-			} else {
-				var destroyed_status  = 'but not destroyed ';
-				//console.log(name+' was NOT destroyed!');
-			}
-			
-			
-			//TODO: separate attacking drgons by source
-			if (manga_attacked_by !== undefined) {
-					
-				//split array into string
-				var attacking_dragons = manga_attacked_by.split(", ");
-					
-				//how many values in string
-				var n = attacking_dragons.length;
-					
-				//counter
-				var d = 1;
-					
-				html += '<p>Attacked '+destroyed_status+'by ';
-					
-				for (var dragon in attacking_dragons) {
-						
-					html += '<a class="more doe" href="#'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
-						
-					if (n > 1 && d < n - 1 ) {
-						//if multiple attackers, and this is not the second to last on the list, add comma
-						html +=', ';
-					} else if (n > 1 && d == n - 1 ) {
-						//if multiple attackers, and this is the second to last on the list, add 'and'
-						html +=' and ';
-					}
-						
-					//update counter
-					d++;
-				}
-					
-				html += '.';
-					
-			} else {
-				html += '<p>Has not been attacked.';
-				console.log(name+' was NOT attacked!');
-			}
-				
-			html += '</div>';
-			
-			if (name == 'Ebisu Garden Place') {
-				var marker='frog.png';
-			} else {
-				var marker='blue-dragon.png';
-			}
-				
-				
-				
-			createMarker(kekkaiMap,new google.maps.LatLng(
-				latitude,
-				longitude),
-				marker,
-				html);
-				
-			console.log(name+' is a kekkai in the manga!');
-			
-		}
-		
 	});
 	
 }
