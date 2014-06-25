@@ -1,6 +1,7 @@
 //replace map with kekkaiMap
 var map; //fuera del contexto de las funciones para que sea siempre accesible
-var veces=0;
+
+var markers = [];
 
 var getFrom;
 
@@ -68,7 +69,7 @@ function initialize() {
 	});
 	
 	
-	getKekkai('tv');
+	getKekkai('manga');
 
 
 	/*		
@@ -76,7 +77,7 @@ function initialize() {
 	);*/
 
 
-	
+
 
 	
 	$("#select-kekkai a").click(
@@ -85,7 +86,16 @@ function initialize() {
 			event.preventDefault();
 			
 			var selectedKekkai = $(this).attr('id');
-			selectKekkai(selectedKekkai);
+			//selectKekkai(selectedKekkai);
+			
+			console.log('CLICK');
+			
+			if (selectedKekkai == 'remove') {
+				clearMarkers();
+			} else if (selectedKekkai == 'showall') {
+				showMarkers();
+			}
+			
 	
 		}
 	);
@@ -100,7 +110,7 @@ function getKekkai(kekkaiSource) {
 	console.log('kekkai source is '+kekkaiSource);
 	
 	$.getJSON("kekkai.json",function(data){ //funcion con los datos leidos = ultimo parametro
-				//lo de arriba es un callback function, se pone como ultimo parametro
+		//lo de arriba es un callback function, se pone como ultimo parametro
 		
 		var shownKekkaiIndex = [];
 		var indexKekkai = 0;
@@ -161,7 +171,7 @@ function getKekkai(kekkaiSource) {
 			var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
 			html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
 				
-			html += '<div style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
+			html += '<div class="infowindow-text" style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
 				
 			if ((kekkaiSource == 'manga' && manga_destroyed == 'Yes') || (kekkaiSource == 'tv' && tv_destroyed == 'Yes') || (kekkaiSource == 'movie' && movie_destroyed == 'Yes')) {
 				var destroyed_status = 'and destroyed ';
@@ -313,25 +323,53 @@ function selectKekkai(selectedKekkai) {
 
 //crea un marker con una burbuja de texto, y una imagen personalizada
 function createMarker(map,point,image,txt) {
-
 	var marker = new google.maps.Marker({
 		position: point,
 		map: map,
 		icon: image
 	});
+	
+	
+	markers.push(marker);
+	
 
 
 
 	var infowindow = new google.maps.InfoWindow({
-	content: txt
+		//content: txt
 	});
 	google.maps.event.addListener(marker, 'click', function() {
 
-	  infowindow.open(map,marker);
+		//load content into window when marker is clicked NOT before
+		infowindow.setContent(txt);
+		infowindow.open(map,marker);
 
 	});
 
 	return marker;
+}
+
+// Sets the map on all markers in the array.
+function setAllMap(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setAllMap(null);
+}
+
+// Shows any markers currently in the array.
+function showMarkers() {
+  setAllMap(map);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
 }
 
 //click on infobox links
