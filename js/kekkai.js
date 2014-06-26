@@ -5,6 +5,9 @@ var markers = [];
 
 var getFrom;
 
+var markerDragon = 'dragon.svg';
+
+var markerFroggie ='froggie.svg';
 
 function initialize() {
 
@@ -219,9 +222,9 @@ function getKekkai(kekkaiSource) {
 			html += '</div>';
 			
 			if (name == 'Ebisu Garden Place') {
-				var marker='frog.png';
+				var marker=markerFroggie;
 			} else {
-				var marker='blue-dragon.png';
+				var marker=markerDragon;
 			}
 			
 			infowindowContent.push(html);
