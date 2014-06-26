@@ -88,7 +88,6 @@ function initialize() {
 			var selectedKekkai = $(this).attr('id');
 			//selectKekkai(selectedKekkai);
 			
-			console.log('when CLICK: '+markers);
 			
 			if (selectedKekkai == 'remove') {
 				clearMarkers();
