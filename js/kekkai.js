@@ -1,5 +1,5 @@
 //replace map with kekkaiMap
-var map; //fuera del contexto de las funciones para que sea siempre accesible
+var kekkaiMap; //fuera del contexto de las funciones para que sea siempre accesible
 
 var markers = [];
 
@@ -88,7 +88,7 @@ function initialize() {
 			var selectedKekkai = $(this).attr('id');
 			//selectKekkai(selectedKekkai);
 			
-			console.log('CLICK');
+			console.log('when CLICK: '+markers);
 			
 			if (selectedKekkai == 'remove') {
 				clearMarkers();
@@ -166,11 +166,10 @@ function getKekkai(kekkaiSource) {
 			var infowindowContent = [name];
 			console.log('mandamos: 1- '+infowindowContent);
 
+			
+			//create variable to store html for infowindow
 			var html='';
 			
-			//como no funciona flickr, uso imagenes bajadas	
-			//var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-			//html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
 				
 			html = '<div class="infowindow-text" style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
 				
@@ -178,7 +177,6 @@ function getKekkai(kekkaiSource) {
 				var destroyed_status = 'and destroyed ';
 			} else {
 				var destroyed_status  = 'but not destroyed ';
-				//console.log(name+' was NOT destroyed!');
 			}
 			
 			
@@ -326,21 +324,24 @@ function selectKekkai(selectedKekkai) {
 
 //crea un marker con una burbuja de texto, y una imagen personalizada
 function createMarker(map,point,image,content) {
+	
+	//create marker
 	var marker = new google.maps.Marker({
 		position: point,
 		map: map,
 		icon: image
 	});
 	
-	
+	//push to markers array 
 	markers.push(marker);
 	
-
 	
-
+	//create info window, but don't put in any content yet
 	var infowindow = new google.maps.InfoWindow({
 		//content: txt
 	});
+	
+	//when marker is clicked, load content and show window
 	google.maps.event.addListener(marker, 'click', function() {
 
 		//prepare content
@@ -351,11 +352,13 @@ function createMarker(map,point,image,content) {
 		var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
 		img ='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
 
-		
+		//put content together
 		var newContent = img+text;
 		
 		//load content into window when marker is clicked NOT before
 		infowindow.setContent(newContent);
+		
+		//open window \O/
 		infowindow.open(map,marker);
 
 	});
@@ -364,9 +367,10 @@ function createMarker(map,point,image,content) {
 }
 
 // Sets the map on all markers in the array.
-function setAllMap(map) {
+function setAllMap(kekkaiMap) {
+  console.log('markers: '+markers);
   for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
+    markers[i].setMap(kekkaiMap);
   }
 }
 
@@ -377,7 +381,8 @@ function clearMarkers() {
 
 // Shows any markers currently in the array.
 function showMarkers() {
-  setAllMap(map);
+   console.log('markers: '+markers);
+   setAllMap(kekkaiMap);
 }
 
 // Deletes all markers in the array by removing references to them.
