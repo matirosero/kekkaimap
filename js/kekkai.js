@@ -163,15 +163,16 @@ function getKekkai(kekkaiSource) {
 						
 			var information = data.kekkai[selectedIndexKekkai].information;
 				
-			
+			var infowindowContent = [name];
+			console.log('mandamos: 1- '+infowindowContent);
 
 			var html='';
 			
 			//como no funciona flickr, uso imagenes bajadas	
-			var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-			html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
+			//var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
+			//html='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
 				
-			html += '<div class="infowindow-text" style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
+			html = '<div class="infowindow-text" style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
 				
 			if ((kekkaiSource == 'manga' && manga_destroyed == 'Yes') || (kekkaiSource == 'tv' && tv_destroyed == 'Yes') || (kekkaiSource == 'movie' && movie_destroyed == 'Yes')) {
 				var destroyed_status = 'and destroyed ';
@@ -225,14 +226,16 @@ function getKekkai(kekkaiSource) {
 			} else {
 				var marker='blue-dragon.png';
 			}
-				
+			
+			infowindowContent.push(html);
+			console.log('mandamos: '+infowindowContent);	
 				
 				
 			createMarker(kekkaiMap,new google.maps.LatLng(
 				latitude,
 				longitude),
 				marker,
-				html);
+				infowindowContent);
 				
 			console.log(name+' is a kekkai in the manga!');
 			
@@ -322,7 +325,7 @@ function selectKekkai(selectedKekkai) {
 
 
 //crea un marker con una burbuja de texto, y una imagen personalizada
-function createMarker(map,point,image,txt) {
+function createMarker(map,point,image,content) {
 	var marker = new google.maps.Marker({
 		position: point,
 		map: map,
@@ -333,15 +336,26 @@ function createMarker(map,point,image,txt) {
 	markers.push(marker);
 	
 
-
+	
 
 	var infowindow = new google.maps.InfoWindow({
 		//content: txt
 	});
 	google.maps.event.addListener(marker, 'click', function() {
 
+		//prepare content
+		var name = content[0];
+		var text = content[1]
+		
+		//imagen bajada anteriormente
+		var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
+		img ='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
+
+		
+		var newContent = img+text;
+		
 		//load content into window when marker is clicked NOT before
-		infowindow.setContent(txt);
+		infowindow.setContent(newContent);
 		infowindow.open(map,marker);
 
 	});
