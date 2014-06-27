@@ -1,4 +1,31 @@
+body {
+	
+}
+#wrap {
+	margin:1% auto;
+	width:960px;
+}
+#site-header {
+	float:left;
+	width:190px;
+}
+
 #kekkai-map {
-	height:80%;
-	width:100%;
+	float:right;
+	height:96%;
+	width:750px;
+}
+#select-kekkai {
+	list-style: none;
+	margin: 1em 0;
+	padding: 0;
+}
+
+#select-kekkai li a {
+	background: #ddd;
+	display: block;
+	line-height: 2em;
+	margin: 1px 0;
+	text-align: center;
+	width: 190px;
 }

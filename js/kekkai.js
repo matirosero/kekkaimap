@@ -1,56 +1,22 @@
 //replace map with kekkaiMap
-var kekkaiMap; //fuera del contexto de las funciones para que sea siempre accesible
+var kekkaiMap; 
 
 var markers = [];
 
 var getFrom;
 
 var markerDragon = 'dragon.svg';
-
 var markerFroggie ='froggie.svg';
 
 function initialize() {
 
-	//style
-	var style_kekkai = [
-		{
-			"featureType": "administrative",
-			"stylers": [
-				{ "visibility": "on" }
-			]
-		},{
-			"featureType": "transit",
-			"stylers": [
-				{ "visibility": "off" }
-			]
-		},{
-			"featureType": "road",
-			"stylers": [
-				{ "visibility": "simplified" },
-				{ "color": "#ffffff" }
-			]
-		},{
-			"featureType": "poi",
-			"stylers": [
-				{ "visibility": "off" }
-			]
-		},{
-			"featureType": "poi.park",
-			"stylers": [
-				{ "visibility": "simplified" }
-			]
-		},{
-			"featureType": "landscape",
-			"stylers": [
-				{ "visibility": "simplified" }
-			]
-		}
-	];
+	//style from http://snazzymaps.com/style/74/becomeadinosaur
+	var style_kekkai = [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"color":"#f5f5f2"},{"visibility":"on"}]},{"featureType":"administrative","stylers":[{"visibility":"off"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"poi.attraction","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"visibility":"on"}]},{"featureType":"poi.business","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","stylers":[{"visibility":"off"}]},{"featureType":"poi.place_of_worship","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","stylers":[{"visibility":"off"}]},{"featureType":"poi.sports_complex","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"visibility":"simplified"},{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"color":"#ffffff"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.park","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#71c8d4"}]},{"featureType":"landscape","stylers":[{"color":"#e5e8e7"}]},{"featureType":"poi.park","stylers":[{"color":"#8ba129"}]},{"featureType":"road","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.sports_complex","elementType":"geometry","stylers":[{"color":"#c7c7c7"},{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#a0d3d3"}]},{"featureType":"poi.park","stylers":[{"color":"#91b65d"}]},{"featureType":"poi.park","stylers":[{"gamma":1.51}]},{"featureType":"road.local","stylers":[{"visibility":"off"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"poi.government","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"landscape","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.local","stylers":[{"visibility":"simplified"}]},{"featureType":"road"},{"featureType":"road"},{},{"featureType":"road.highway"}];
 	//Then we use this data to create the styles.
 	var styled_kekkai = new google.maps.StyledMapType(style_kekkai, { name: "kekkai style" });
 
 	//Tokyo location
-	var latlng = new google.maps.LatLng(35.689487, 139.691706);
+	var latlng = new google.maps.LatLng(35.689487, 139.673706);
     
     var myOptions = {
     	zoom: 12,
@@ -72,15 +38,8 @@ function initialize() {
 	});
 	
 	
+	//calls function that gets kekkai
 	getKekkai('manga');
-
-
-	/*		
-		}
-	);*/
-
-
-
 
 	
 	$("#select-kekkai a").click(
@@ -89,12 +48,15 @@ function initialize() {
 			event.preventDefault();
 			
 			var selectedKekkai = $(this).attr('id');
-			//selectKekkai(selectedKekkai);
 			
-			
-			if (selectedKekkai == 'remove') {
+			if (selectedKekkai == 'manga' || selectedKekkai == 'tv' || selectedKekkai == 'movie') {
+				
 				clearMarkers();
-			} else if (selectedKekkai == 'showall') {
+				getKekkai(selectedKekkai);
+				
+			}  else if (selectedKekkai == 'showall') {
+				
+				//this should show all kekkai, not the array that has been selected previously
 				showMarkers();
 			}
 			
@@ -114,59 +76,62 @@ function getKekkai(kekkaiSource) {
 	$.getJSON("kekkai.json",function(data){ //funcion con los datos leidos = ultimo parametro
 		//lo de arriba es un callback function, se pone como ultimo parametro
 		
+		//array to hold kekkai indexes
 		var shownKekkaiIndex = [];
+		
+		//variable for each kekkai index in turn
+		//TODO: iterate in function
 		var indexKekkai = 0;
-		var myKekkai = [];
 		
 		for (var i in data.kekkai) {
 
 			if (kekkaiSource == 'manga' && data.kekkai[i].manga_is_kekkai == 'Yes') {
 				
-				//if this was a kekkai in the manga, create marker
+				//if this was a kekkai in the manga, add to array
 				
-				console.log(data.kekkai[i].name+' is a kekkai in the manga with ID '+indexKekkai);
+				//console.log(data.kekkai[i].name+' is a kekkai in the manga with ID '+indexKekkai);
 				shownKekkaiIndex.push(indexKekkai);
-				console.log('new array of kekkai: '+shownKekkaiIndex);
-				//data.kekkai[i].push(myKekkai);
+				//console.log('new array of kekkai: '+shownKekkaiIndex);
 				
 			} else if (kekkaiSource == 'tv' && data.kekkai[i].tv_is_kekkai == 'Yes') {
+				//if this was a kekkai in the tv anime, add to array
 				shownKekkaiIndex.push(indexKekkai);
 			} else if (kekkaiSource == 'movie' && data.kekkai[i].movie_is_kekkai == 'Yes') {
+				//if this was a kekkai in the movie, add to array
 				shownKekkaiIndex.push(indexKekkai);
 			} 
 			
 			indexKekkai++;
 			
-			
 			//console.log(name+'/'+name_japanese+': '+latitude+', '+longitude);
 					
 		}
 		
-		console.log('FINAL array of kekkai: '+shownKekkaiIndex);
+		//console.log('FINAL array of kekkai: '+shownKekkaiIndex);
 		
-		for (var k in shownKekkaiIndex) {
-			console.log('index: '+shownKekkaiIndex[k]);
+		for (var i in shownKekkaiIndex) {
+			//console.log('index: '+shownKekkaiIndex[i]);
 			
-			var selectedIndexKekkai = shownKekkaiIndex[k]
-			console.log('name: '+data.kekkai[shownKekkaiIndex[k]].name);
+			var thisKekkai = shownKekkaiIndex[i]
+			//console.log('name: '+data.kekkai[shownKekkaiIndex[i]].name);
 			
-			var name = data.kekkai[selectedIndexKekkai].name;
-			var name_japanese = data.kekkai[selectedIndexKekkai].name_japanese;
-			var name_romanji = data.kekkai[selectedIndexKekkai].name_romanji;
-			var latitude = data.kekkai[selectedIndexKekkai].latitude;
-			var longitude = data.kekkai[selectedIndexKekkai].longitude;
-			var manga_destroyed = data.kekkai[selectedIndexKekkai].manga_destroyed;
-			var manga_attacked_by = data.kekkai[selectedIndexKekkai].manga_attacked_by;
-			var tv_destroyed = data.kekkai[selectedIndexKekkai].tv_destroyed;
-			var tv_attacked_by = data.kekkai[selectedIndexKekkai].tv_attacked_by;
-			var movie_destroyed = data.kekkai[selectedIndexKekkai].movie_destroyed;
-			var movie_attacked_by = data.kekkai[selectedIndexKekkai].movie_attacked_by;
+			var name = data.kekkai[thisKekkai].name;
+			var name_japanese = data.kekkai[thisKekkai].name_japanese;
+			var name_romanji = data.kekkai[thisKekkai].name_romanji;
+			var latitude = data.kekkai[thisKekkai].latitude;
+			var longitude = data.kekkai[thisKekkai].longitude;
+			var manga_destroyed = data.kekkai[thisKekkai].manga_destroyed;
+			var manga_attacked_by = data.kekkai[thisKekkai].manga_attacked_by;
+			var tv_destroyed = data.kekkai[thisKekkai].tv_destroyed;
+			var tv_attacked_by = data.kekkai[thisKekkai].tv_attacked_by;
+			var movie_destroyed = data.kekkai[thisKekkai].movie_destroyed;
+			var movie_attacked_by = data.kekkai[thisKekkai].movie_attacked_by;
 				
 						
-			var information = data.kekkai[selectedIndexKekkai].information;
+			var information = data.kekkai[thisKekkai].information;
 				
 			var infowindowContent = [name];
-			console.log('mandamos: 1- '+infowindowContent);
+			//console.log('mandamos: 1- '+infowindowContent);
 
 			
 			//create variable to store html for infowindow
@@ -182,7 +147,7 @@ function getKekkai(kekkaiSource) {
 			}
 			
 			
-			//TODO: separate attacking drgons by source
+			//TODO: separate attacking dragons by source
 			if (manga_attacked_by !== undefined) {
 					
 				//split array into string
@@ -222,106 +187,28 @@ function getKekkai(kekkaiSource) {
 			html += '</div>';
 			
 			if (name == 'Ebisu Garden Place') {
-				var marker=markerFroggie;
+				var markerIcon=markerFroggie;
 			} else {
-				var marker=markerDragon;
+				var markerIcon=markerDragon;
 			}
 			
 			infowindowContent.push(html);
-			console.log('mandamos: '+infowindowContent);	
+			//console.log('mandamos: '+infowindowContent);	
 				
 				
 			createMarker(kekkaiMap,new google.maps.LatLng(
 				latitude,
 				longitude),
-				marker,
+				markerIcon,
 				infowindowContent);
 				
-			console.log(name+' is a kekkai in the manga!');
+			//console.log(name+' is a kekkai in the manga!');
 			
 		}
 		
 	});
 	
 }
-
-
-
-
-//Select manga, tv or movie kekkai
-function selectKekkai(selectedKekkai) {
-	
-	console.log('selected: '+selectedKekkai);
-	
-	var kekkai_list = "";
-			
-	$.getJSON("kekkai.json",function(data){ //funcion con los datos leidos = ultimo parametro
-	//lo de arriba es un callback function, se pone como ultimo parametro
-		
-///COMO HAGO PARA DECIR, SI TAL ES TAL
-		
-		
-		for (var i in data.kekkai) {
-
-			var name = data.kekkai[i].name;
-			var name_japanese = data.kekkai[i].name_japanese;
-			var name_romanji = data.kekkai[i].name_romanji;
-			var latitude = data.kekkai[i].latitude;
-			var longitude = data.kekkai[i].longitude;
-			var manga_is_kekkai = data.kekkai[i].manga_is_kekkai;
-			var tv_is_kekkai = data.kekkai[i].tv_is_kekkai;
-			var movie_is_kekkai = data.kekkai[i].movie_is_kekkai;
-			
-			kekkai_list += i + ' - '+name+' | ';
-			
-			
-			//console.log(name+' is a kekkai in manga: '+manga_is_kekkai);
-			//console.log(name+' is a kekkai in tv: '+tv_is_kekkai);
-			//console.log(name+' is a kekkai in movie: '+movie_is_kekkai);	
-			
-			if(selectedKekkai == 'manga' && manga_is_kekkai == 'Yes') {
-				
-				
-				//console.log(name+' will show up');
-				
-			} else if(selectedKekkai == 'tv' && tv_is_kekkai == 'Yes') {
-				//console.log(name+' will show up');
-			} else if(selectedKekkai == 'movie' && movie_is_kekkai == 'Yes') {
-				//console.log(name+' will show up');
-			} 
-			
-					/*
-					var name = data.kekkai[i].name;
-					var name_japanese = data.kekkai[i].name_japanese;
-					var latitude = data.kekkai[i].latitude;
-					var longitude = data.kekkai[i].longitude;
-					
-					
-					if (name == 'Ebisu Garden Place') {
-						var marker='frog.png';
-					} else {
-						var marker='blue-dragon.png';
-					}
-					
-					
-					var html=name;
-					
-
-					/*
-					createMarker(kekkaiMap,new google.maps.LatLng(
-						latitude,
-						longitude),
-						marker,
-						html);
-					*/
-		}
-		console.log(kekkai_list);
-	});
-
-
-
-}
-
 
 
 //crea un marker con una burbuja de texto, y una imagen personalizada
@@ -367,6 +254,8 @@ function createMarker(map,point,image,content) {
 
 	return marker;
 }
+
+
 
 // Sets the map on all markers in the array.
 function setAllMap(kekkaiMap) {
