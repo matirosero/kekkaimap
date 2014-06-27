@@ -1,0 +1,5 @@
+Switching between manga, tv and movie not working.
+
+Last worked:
+
+4a043f5  slider works

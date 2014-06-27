@@ -16,21 +16,21 @@ var markers = [];
 
 
 //marker for most kekkai
-var marker_dragon = 'dragon.svg';
-var marker_shape_dragon = {
-	coord: [34,2, 34,2, 34,2, 25,0, 12,4, 3,13, 0,25, 3,36, 10,45, 20,50, 25,65, 30,50, 40,45, 47,36, 50,25, 46,11, 34,2],
-	type: 'poly'
+var markerDragon = 'dragon.svg';
+var markerShapeDragon = {
+      coord: [34,2, 34,2, 34,2, 25,0, 12,4, 3,13, 0,25, 3,36, 10,45, 20,50, 25,65, 30,50, 40,45, 47,36, 50,25, 46,11, 34,2],
+      type: 'poly'
 };
 
 //marker for a SPECIAL kekkai
-var marker_froggie ='froggie.svg';
-var marker_shape_froggie = {
-	coord: [51,19, 51,17, 48,9, 41,5, 36,3, 35,2, 35,2, 27,1, 17,3, 11,1, 3,4, 0,12, 2,19, 0,23, 2,31, 9,44, 22,51, 26,66, 31,51, 42,46, 49,37, 52,26, 51,19],
-	type: 'poly'
+var markerFroggie ='froggie.svg';
+var markerShapeFroggie = {
+      coord: [51,19, 51,17, 48,9, 41,5, 36,3, 35,2, 35,2, 27,1, 17,3, 11,1, 3,4, 0,12, 2,19, 0,23, 2,31, 9,44, 22,51, 26,66, 31,51, 42,46, 49,37, 52,26, 51,19],
+      type: 'poly'
 };
 
 //array for the indexes of the kekkai to be shown
-var shown_kekkai_index = [];
+//var shownKekkaiIndex = [];
 
 //object to hold the info from kekkai.json
 var kekkaiObject = {};
@@ -39,29 +39,29 @@ function initialize() {
 
 	//style from http://snazzymaps.com/style/74/becomeadinosaur
 	var style_kekkai = [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"color":"#f5f5f2"},{"visibility":"on"}]},{"featureType":"administrative","stylers":[{"visibility":"off"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"poi.attraction","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"visibility":"on"}]},{"featureType":"poi.business","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","stylers":[{"visibility":"off"}]},{"featureType":"poi.place_of_worship","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","stylers":[{"visibility":"off"}]},{"featureType":"poi.sports_complex","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"visibility":"simplified"},{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"color":"#ffffff"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.park","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#71c8d4"}]},{"featureType":"landscape","stylers":[{"color":"#e5e8e7"}]},{"featureType":"poi.park","stylers":[{"color":"#8ba129"}]},{"featureType":"road","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.sports_complex","elementType":"geometry","stylers":[{"color":"#c7c7c7"},{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#a0d3d3"}]},{"featureType":"poi.park","stylers":[{"color":"#91b65d"}]},{"featureType":"poi.park","stylers":[{"gamma":1.51}]},{"featureType":"road.local","stylers":[{"visibility":"off"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"poi.government","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"landscape","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.local","stylers":[{"visibility":"simplified"}]},{"featureType":"road"},{"featureType":"road"},{},{"featureType":"road.highway"}];
-	
+
 	//Then we use this data to create the styles.
 	var styled_kekkai = new google.maps.StyledMapType(style_kekkai, { name: "kekkai style" });
 
 	//Tokyo location
 	var latlng = new google.maps.LatLng(35.689487, 139.673706);
     
-    var kekkaiMap_options = {
+    var myOptions = {
     	zoom: 12,
 		center: latlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP   //MapTypeId.SATELLITE,
     };
     
     //replace map with kekkaiMap
-    kekkaiMap = new google.maps.Map(document.getElementById("kekkai-map"), kekkaiMap_options);
+    kekkaiMap = new google.maps.Map(document.getElementById("kekkai-map"), myOptions);
     
     //Add style
     kekkaiMap.mapTypes.set('map_styles_kekkai', styled_kekkai);
 	kekkaiMap.setMapTypeId('map_styles_kekkai');
 
-
+	
 	//calls function that gets kekkai from the manga to start off
-	get_kekkai('manga');
+	getKekkai('manga');
 
 	//pick kekkai from the manga/tv/movie, show on map
 	$("#select-kekkai a").click(function(event){
@@ -73,17 +73,17 @@ function initialize() {
 		if (selectedKekkai == 'manga' || selectedKekkai == 'tv' || selectedKekkai == 'movie') {
 				
 			clearMarkers();
-			get_kekkai(selectedKekkai);
+			getKekkai(selectedKekkai);
 				
 		}  else if (selectedKekkai == 'showall') {
 				
 			//this should show all kekkai, not the array that has been selected previously
 			showMarkers();
-			}
+		}
 			
 	
-		}
-	);
+	}
+);
 
 	//click on infobox links
 	$('#kekkai-map').on("click",'.more', function(e) {
@@ -94,7 +94,7 @@ function initialize() {
 		showInfo(more_about[0],more_about[1])
 		
 	});
-	
+//este que???	
 }
 
 /*
@@ -170,7 +170,7 @@ function showInfo(type,name) {
 		
 	$('#more-info').html(extend_content);
 	
-	//console.log('array is '+shown_kekkai_index);
+	//console.log('array is '+shownKekkaiIndex);
 	//console.log('object filled wiith '+kekkaiObject);
 	
 	$('#more-info').on('click',function(){
@@ -179,14 +179,14 @@ function showInfo(type,name) {
 	
 }
 
-function get_kekkai(kekkaiSource) {
+function getKekkai(kekkaiSource) {
 	
 	console.log('kekkai source is '+kekkaiSource);
 	
 	$.getJSON("kekkai.json",function(data){ //funcion con los datos leidos = ultimo parametro
 		//lo de arriba es un callback function, se pone como ultimo parametro
 		
-		//array to hold kekkai indexes
+		var shownKekkaiIndex = []; //array to hold kekkai indexes
 		kekkaiObject = data.kekkai;
 		console.log('object filled wiith '+kekkaiObject);
 		
@@ -201,15 +201,15 @@ function get_kekkai(kekkaiSource) {
 				//if this was a kekkai in the manga, add to array
 				
 				//console.log(data.kekkai[i].name+' is a kekkai in the manga with ID '+indexKekkai);
-				shown_kekkai_index.push(indexKekkai);
-				//console.log('new array of kekkai: '+shown_kekkai_index);
+				shownKekkaiIndex.push(indexKekkai);
+				//console.log('new array of kekkai: '+shownKekkaiIndex);
 				
 			} else if (kekkaiSource == 'tv' && data.kekkai[i].tv_is_kekkai == 'Yes') {
 				//if this was a kekkai in the tv anime, add to array
-				shown_kekkai_index.push(indexKekkai);
+				shownKekkaiIndex.push(indexKekkai);
 			} else if (kekkaiSource == 'movie' && data.kekkai[i].movie_is_kekkai == 'Yes') {
 				//if this was a kekkai in the movie, add to array
-				shown_kekkai_index.push(indexKekkai);
+				shownKekkaiIndex.push(indexKekkai);
 			} 
 			
 			indexKekkai++;
@@ -218,13 +218,13 @@ function get_kekkai(kekkaiSource) {
 					
 		}
 		
-		//console.log('FINAL array of kekkai: '+shown_kekkai_index);
+		//console.log('FINAL array of kekkai: '+shownKekkaiIndex);
 		
-		for (var i in shown_kekkai_index) {
-			//console.log('index: '+shown_kekkai_index[i]);
+		for (var i in shownKekkaiIndex) {
+			//console.log('index: '+shownKekkaiIndex[i]);
 			
-			var thisKekkai = shown_kekkai_index[i]
-			//console.log('name: '+data.kekkai[shown_kekkai_index[i]].name);
+			var thisKekkai = shownKekkaiIndex[i]
+			//console.log('name: '+data.kekkai[shownKekkaiIndex[i]].name);
 			
 			var name = data.kekkai[thisKekkai].name;
 			var name_japanese = data.kekkai[thisKekkai].name_japanese;
@@ -310,11 +310,11 @@ function get_kekkai(kekkaiSource) {
 			html += '</div>';
 			
 			if (name == 'Ebisu Garden Place') {
-				var markerIcon=marker_froggie;
-				var markerShape=marker_shape_froggie;
+				var markerIcon=markerFroggie;
+				var markerShape=markerShapeFroggie;
 			} else {
-				var markerIcon=marker_dragon;
-				var markerShape=marker_shape_dragon;
+				var markerIcon=markerDragon;
+				var markerShape=markerShapeDragon;
 			}
 			
 			
@@ -414,3 +414,4 @@ function deleteMarkers() {
 
 	
 
+ 
