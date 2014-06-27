@@ -19,6 +19,9 @@ var markerShapeFroggie = {
       type: 'poly'
 };
 
+var shownKekkaiIndex = [];
+
+var kekkaiObject = {};
 
 function initialize() {
 
@@ -94,7 +97,64 @@ function showInfo(type,name) {
 		$('#more-info').slideDown( "slow");	
 			
 	}
-	$('#more-info').html(name);
+	
+	var img;
+	var name_japanese;
+	var name_romanji;
+	var information
+	
+	if (type == 'doe') {
+		
+		
+		//this also is not loading
+		$.getJSON("doe.json", function(data){
+		
+
+			var doeObject = data.doe;
+			console.log('object filled wiith '+doeObject);
+		
+			//variable for each kekkai index in turn
+			//TODO: iterate in function
+		
+			for (var i in data.doe) {
+			
+				if (data.doe[i].name == name ) {
+					name_japanese = data.doe[i].name_japanese;
+					img = '<img class="doe_thumb" src="images/'+data.doe[i].image+'" alt="'+name+'">';
+					information = data.doe[i].information;
+				
+					console.log(data.doe[i].name_japanese);
+				}
+			}
+		});
+		
+	} else if (type == 'kekkai') {
+		$('#more-info').append(' this is a kekkai');
+		
+		for (var i in kekkaiObject) {
+			
+			if (kekkaiObject[i].name == name ) {
+					img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
+					img ='<img class="kekkai_thumb" src="images/'+img+'_m.jpg" alt="'+name+'">';
+				
+					name_japanese = kekkaiObject[i].name_japanese;
+					name_romanji = kekkaiObject[i].name_romanji;
+					information = kekkaiObject[i].information;
+			}
+			
+		}
+		
+		
+	}
+	var extend_content = '<div class="extend-pic">'+img+'</div>\
+		<div class="extend-info"><h2>'+name+'</h2>\
+		<h4>'+name_japanese+'</h4>\
+		<p>'+information+'</p></div>';
+		
+	$('#more-info').html(extend_content);
+	
+	//console.log('array is '+shownKekkaiIndex);
+	//console.log('object filled wiith '+kekkaiObject);
 	
 	$('#more-info').on('click',function(){
 		$('#more-info').slideUp( "slow");
@@ -110,7 +170,8 @@ function getKekkai(kekkaiSource) {
 		//lo de arriba es un callback function, se pone como ultimo parametro
 		
 		//array to hold kekkai indexes
-		var shownKekkaiIndex = [];
+		kekkaiObject = data.kekkai;
+		console.log('object filled wiith '+kekkaiObject);
 		
 		//variable for each kekkai index in turn
 		//TODO: iterate in function

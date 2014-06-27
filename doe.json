@@ -1,0 +1,50 @@
+{"doe":[
+	{
+		"name": "Monou Fuuma",
+		"name_japanese": "桃生 封真",
+		"image": "monou-fuuma.png",
+		"information": "LOVE"
+	},
+	{
+		"name": "Kuzuki Kakyou",
+		"name_japanese": "玖月 牙暁",
+		"image": "kuzuki-kakyou.png",
+    "information": "SO SAD"
+	},
+	{
+		"name": "Sakurazuka Seishirou",
+		"name_japanese": "桜塚 星史郎",
+		"image": "sakurazuka-seishirou.png",
+    "information": "Sakurazukamori"
+	},
+	{
+		"name": "Nataku",
+		"name_japanese": "那吒",
+		"image": "nataku.png",
+    "information": "Kazuki"
+	},
+	{
+		"name": "Kigai Yuuto",
+		"name_japanese": "麒飼 遊人",
+		"image": "kigai-yuuto.png",
+    "information": "host"
+	},
+	{
+		"name": "Yatouji Satsuki",
+		"name_japanese": "八頭司 颯姫",
+		"image": "yatouji-satsuki.png",
+    "information": "BEAST"
+	},
+	{
+		"name": "Shiyuu Kusanagi",
+		"name_japanese": "志勇 草薙",
+		"image": "shiyuu-kusanagi.png",
+    "information": "Tree hugger"
+	},
+	{
+		"name": "Asagi Shougo",
+		"name_japanese": "浅黄 笙悟",
+		"image": "asagi-shougo.png",
+    "information": "movie only"
+	}
+]}
