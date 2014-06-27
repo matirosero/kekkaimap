@@ -6,7 +6,19 @@ var markers = [];
 var getFrom;
 
 var markerDragon = 'dragon.svg';
+
+var markerShapeDragon = {
+      coord: [34,2, 34,2, 34,2, 25,0, 12,4, 3,13, 0,25, 3,36, 10,45, 20,50, 25,65, 30,50, 40,45, 47,36, 50,25, 46,11, 34,2],
+      type: 'poly'
+};
+
 var markerFroggie ='froggie.svg';
+
+var markerShapeFroggie = {
+      coord: [51,19, 51,17, 48,9, 41,5, 36,3, 35,2, 35,2, 27,1, 17,3, 11,1, 3,4, 0,12, 2,19, 0,23, 2,31, 9,44, 22,51, 26,66, 31,51, 42,46, 49,37, 52,26, 51,19],
+      type: 'poly'
+};
+
 
 function initialize() {
 
@@ -64,10 +76,31 @@ function initialize() {
 		}
 	);
 
-
+	//click on infobox links
+	$('#kekkai-map').on("click",'.more', function(e) {
+		e.preventDefault();
+		
+		var more_about = [$(this).attr('class').replace('more ',''),$(this).attr('href')];
+		
+		showInfo(more_about[0],more_about[1])
+		
+	});
 	
 }
 
+function showInfo(type,name) {
+	console.log(name);
+	if ($('#more-info').is(':hidden')) {
+		$('#more-info').slideDown( "slow");	
+			
+	}
+	$('#more-info').html(name);
+	
+	$('#more-info').on('click',function(){
+		$('#more-info').slideUp( "slow");
+	});
+	
+}
 
 function getKekkai(kekkaiSource) {
 	
@@ -128,7 +161,7 @@ function getKekkai(kekkaiSource) {
 			var movie_attacked_by = data.kekkai[thisKekkai].movie_attacked_by;
 				
 						
-			var information = data.kekkai[thisKekkai].information;
+			var kekkai_information = data.kekkai[thisKekkai].information;
 				
 			var infowindowContent = [name];
 			//console.log('mandamos: 1- '+infowindowContent);
@@ -138,7 +171,7 @@ function getKekkai(kekkaiSource) {
 			var html='';
 			
 				
-			html = '<div class="infowindow-text" style="float:right;width:250px;"><h3 style="margin:0; padding:0;"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
+			html = '<div class="infowindow-text" style="float:right;width:250px;"><h3 style="margin:0; padding:0;"><a href="'+name+'" class="more kekkai">'+name+'</a></h3>';
 				
 			if ((kekkaiSource == 'manga' && manga_destroyed == 'Yes') || (kekkaiSource == 'tv' && tv_destroyed == 'Yes') || (kekkaiSource == 'movie' && movie_destroyed == 'Yes')) {
 				var destroyed_status = 'and destroyed ';
@@ -146,13 +179,23 @@ function getKekkai(kekkaiSource) {
 				var destroyed_status  = 'but not destroyed ';
 			}
 			
-			
-			//TODO: separate attacking dragons by source
-			if (manga_attacked_by !== undefined) {
-					
+			if (kekkaiSource == 'manga' && manga_attacked_by == undefined) {
+				html += '<p>Has not been attacked.';
+			} else if ((kekkaiSource == 'tv' && tv_attacked_by == undefined) || (kekkaiSource == 'movie' && movie_attacked_by == undefined)){
+				html += '<p>Was never attacked.';
+			} else {
+				
+				var attacking_dragons;
+				
 				//split array into string
-				var attacking_dragons = manga_attacked_by.split(", ");
-					
+				if (kekkaiSource == 'manga') {
+					attacking_dragons = manga_attacked_by.split(", ");
+				} else if (kekkaiSource == 'tv') {
+					attacking_dragons = tv_attacked_by.split(", ");
+				} else if (kekkaiSource == 'movie') {
+					attacking_dragons = movie_attacked_by.split(", ");
+				}
+				
 				//how many values in string
 				var n = attacking_dragons.length;
 					
@@ -160,12 +203,12 @@ function getKekkai(kekkaiSource) {
 				var d = 1;
 				
 				var doe_pic = '';
-					
+				
 				html += '<p>Attacked '+destroyed_status+'by ';
 					
 				for (var dragon in attacking_dragons) {
 						
-					html += '<a class="more doe" href="#'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
+					html += '<a class="more doe" href="'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
 					doe_pic += '<img class="doe_pic" src="images/'+attacking_dragons[dragon].replace(/\s/g, '-').toLowerCase()+'.png" width="40" alt="'+attacking_dragons[dragon]+'" />';
 					console.log(doe_pic);
 						
@@ -180,22 +223,23 @@ function getKekkai(kekkaiSource) {
 					//update counter
 					d++;
 				}
-					
+				
 				html += '.<br />';
 				html += doe_pic;
-					
-			} else {
-				html += '<p>Has not been attacked.';
-				console.log(name+' was NOT attacked!');
+				
 			}
 				
 			html += '</div>';
 			
 			if (name == 'Ebisu Garden Place') {
 				var markerIcon=markerFroggie;
+				var markerShape=markerShapeFroggie;
 			} else {
 				var markerIcon=markerDragon;
+				var markerShape=markerShapeDragon;
 			}
+			
+			
 			
 			infowindowContent.push(html);
 			//console.log('mandamos: '+infowindowContent);	
@@ -205,6 +249,7 @@ function getKekkai(kekkaiSource) {
 				latitude,
 				longitude),
 				markerIcon,
+				markerShape,
 				infowindowContent);
 				
 			//console.log(name+' is a kekkai in the manga!');
@@ -217,13 +262,14 @@ function getKekkai(kekkaiSource) {
 
 
 //crea un marker con una burbuja de texto, y una imagen personalizada
-function createMarker(map,point,image,content) {
+function createMarker(map,point,image,shape,content) {
 	
 	//create marker
 	var marker = new google.maps.Marker({
 		position: point,
 		map: map,
-		icon: image
+		icon: image,
+		shape: shape
 	});
 	
 	//push to markers array 
@@ -287,10 +333,6 @@ function deleteMarkers() {
   markers = [];
 }
 
-//click on infobox links
-	$('#kekkai-map').on("click",'.more', function(e) {
-		e.preventDefault();
-		console.log('go to info');
-	});
+
 	
 

@@ -26,14 +26,42 @@ a:active {
 	float:left;
 	width:190px;
 }
-
+#site-content {
+	float:right;
+	height:96%;
+	position: relative;
+	width:750px;
+}
 #kekkai-map {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	float:right;
-	height:96%;
-	width:750px;
+	height:100%;
+	width:100%;
+}
+#more-info {
+-webkit-border-bottom-right-radius: 3px;
+-webkit-border-bottom-left-radius: 3px;
+-moz-border-radius-bottomright: 3px;
+-moz-border-radius-bottomleft: 3px;
+border-bottom-right-radius: 3px;
+border-bottom-left-radius: 3px;
+
+opacity: 0.95;
+-moz-opacity: 0.95;
+-khtml-opacity: 0.95;
+-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=95);
+filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
+filter:alpha(opacity=95);
+
+	background: #444;
+	bottom:-1px;
+	color: #fff;
+	display: none;
+	height:200px;
+	padding: 10px;
+	position: absolute;
+	width:730px;
 }
 #select-kekkai {
 	list-style: none;
