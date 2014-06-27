@@ -138,7 +138,7 @@ function getKekkai(kekkaiSource) {
 			var html='';
 			
 				
-			html = '<div class="infowindow-text" style="float:right;width:200px;"><h3 style="margin-top:0"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
+			html = '<div class="infowindow-text" style="float:right;width:250px;"><h3 style="margin:0; padding:0;"><a href="#'+name+'" class="more kekkai">'+name+'</a></h3>';
 				
 			if ((kekkaiSource == 'manga' && manga_destroyed == 'Yes') || (kekkaiSource == 'tv' && tv_destroyed == 'Yes') || (kekkaiSource == 'movie' && movie_destroyed == 'Yes')) {
 				var destroyed_status = 'and destroyed ';
@@ -158,12 +158,16 @@ function getKekkai(kekkaiSource) {
 					
 				//counter
 				var d = 1;
+				
+				var doe_pic = '';
 					
 				html += '<p>Attacked '+destroyed_status+'by ';
 					
 				for (var dragon in attacking_dragons) {
 						
 					html += '<a class="more doe" href="#'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
+					doe_pic += '<img class="doe_pic" src="images/'+attacking_dragons[dragon].replace(/\s/g, '-').toLowerCase()+'.png" width="40" alt="'+attacking_dragons[dragon]+'" />';
+					console.log(doe_pic);
 						
 					if (n > 1 && d < n - 1 ) {
 						//if multiple attackers, and this is not the second to last on the list, add comma
@@ -172,12 +176,13 @@ function getKekkai(kekkaiSource) {
 						//if multiple attackers, and this is the second to last on the list, add 'and'
 						html +=' and ';
 					}
-						
+					
 					//update counter
 					d++;
 				}
 					
-				html += '.';
+				html += '.<br />';
+				html += doe_pic;
 					
 			} else {
 				html += '<p>Has not been attacked.';
@@ -239,7 +244,7 @@ function createMarker(map,point,image,content) {
 		
 		//imagen bajada anteriormente
 		var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-		img ='<img src="images/'+img+'.jpg" style="float:left; margin-right:10px; width:100px;">';
+		img ='<img class="kekkai_thumb" height="110" width="110" src="images/'+img+'.jpg" alt="'+name+'">';
 
 		//put content together
 		var newContent = img+text;

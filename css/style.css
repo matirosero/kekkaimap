@@ -1,6 +1,23 @@
 body {
-	
+	color:#444;
+	font-family: "Helvetica Neue", HelveticaNeue, TeXGyreHeros, FreeSans, "Nimbus Sans L", "Liberation Sans", Arimo, Helvetica, Arial, sans-serif;
 }
+a,
+a:visited {
+	color:#999;
+	text-decoration: none;
+}
+a,
+a:visited {
+	color:#999;
+	text-decoration: none;
+}
+a:hover,
+a:focus,
+a:active {
+	color: #3858b5;
+}
+
 #wrap {
 	margin:1% auto;
 	width:960px;
@@ -11,6 +28,9 @@ body {
 }
 
 #kekkai-map {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 	float:right;
 	height:96%;
 	width:750px;
@@ -21,11 +41,51 @@ body {
 	padding: 0;
 }
 
+#select-kekkai li {
+	padding: 3px 0;
+}
 #select-kekkai li a {
-	background: #ddd;
-	display: block;
-	line-height: 2em;
-	margin: 1px 0;
+  background: #eeeeee;
+  background-image: -webkit-linear-gradient(top, #eeeeee, #aaaaaa);
+  background-image: -moz-linear-gradient(top, #eeeeee, #aaaaaa);
+  background-image: -ms-linear-gradient(top, #eeeeee, #aaaaaa);
+  background-image: -o-linear-gradient(top, #eeeeee, #aaaaaa);
+  background-image: linear-gradient(to bottom, #eeeeee, #aaaaaa);
+  -webkit-border-radius: 20;
+  -moz-border-radius: 20;
+  border-radius: 20px;
+  display: block;
+  font-family: 'bebas_neueregular', sans-serif;
+	font-weight: normal;
+  font-size: 18px;
+  color: #ffffff;
+  padding: 10px 0px;
+  text-decoration: none;
+
 	text-align: center;
 	width: 190px;
+}
+#select-kekkai li a:hover,
+#select-kekkai li a:focus,
+#select-kekkai li a:active {
+  background: #76a5de;
+  background-image: -webkit-linear-gradient(top, #76a5de, #3858b5);
+  background-image: -moz-linear-gradient(top, #76a5de, #3858b5);
+  background-image: -ms-linear-gradient(top, #76a5de, #3858b5);
+  background-image: -o-linear-gradient(top, #76a5de, #3858b5);
+  background-image: linear-gradient(to bottom, #76a5de, #3858b5);
+  text-decoration: none;
+}
+.infowindow-text p {
+	margin:0;
+}
+.doe_pic {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	margin:1em 1em 0 0;
+}
+.kekkai_thumb {
+	float:left;
+	margin:0 1em 0 0; 
 }
