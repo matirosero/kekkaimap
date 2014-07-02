@@ -1,6 +1,8 @@
 body {
 	color:#444;
-	font-family: "Helvetica Neue", HelveticaNeue, TeXGyreHeros, FreeSans, "Nimbus Sans L", "Liberation Sans", Arimo, Helvetica, Arial, sans-serif;
+	font-family: 'Roboto', sans-serif;
+	font-size: 13px;
+	font-weight: 300;
 }
 a,
 a:visited {
@@ -116,4 +118,15 @@ filter:alpha(opacity=95);
 .kekkai_thumb {
 	float:left;
 	margin:0 1em 0 0; 
+}
+
+
+.extend-info h2,
+.extend-info h4 {
+	margin:0;
+	padding: 0;
+}
+
+.extend-info h4 {
+	font-weight: normal;
 }
