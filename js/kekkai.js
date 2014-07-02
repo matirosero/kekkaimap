@@ -169,8 +169,6 @@ function showInfo(type,name) {
 
 	}
 
-
-
 	var extend_content = '<div class="extend-pic">'+img+'</div>\
 		<div class="extend-info"><h2>'+name+'</h2>\
 		<h4>'+name_japanese+'</h4>\
@@ -178,9 +176,8 @@ function showInfo(type,name) {
 
 	$('#more-info').html(extend_content);
 
-
-
 }
+
 
 function getKekkai(kekkaiSource) {
 
