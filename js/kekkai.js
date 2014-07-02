@@ -3,13 +3,9 @@
 	doe = dragon(s) of earth, they try to destroy the kekkai
 */
 
-/*
-	TODO: Maybe make an object for doe.json too, and fill both from the initialize function?
-*/
-
 
 //the map
-var kekkaiMap; 
+var kekkaiMap;
 
 //array to hold the markers so I can remove them easier
 var markers = [];
@@ -35,6 +31,9 @@ var markerShapeFroggie = {
 //object to hold the info from kekkai.json
 var kekkaiObject = {};
 
+//object to hold the info from doe.json
+var doeObject = {}
+
 function initialize() {
 
 	//style from http://snazzymaps.com/style/74/becomeadinosaur
@@ -45,21 +44,21 @@ function initialize() {
 
 	//Tokyo location
 	var latlng = new google.maps.LatLng(35.689487, 139.673706);
-    
+
     var myOptions = {
     	zoom: 12,
 		center: latlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP   //MapTypeId.SATELLITE,
     };
-    
+
     //replace map with kekkaiMap
     kekkaiMap = new google.maps.Map(document.getElementById("kekkai-map"), myOptions);
-    
+
     //Add style
     kekkaiMap.mapTypes.set('map_styles_kekkai', styled_kekkai);
 	kekkaiMap.setMapTypeId('map_styles_kekkai');
 
-	
+
 	//calls function that gets kekkai from the manga to start off
 	getKekkai('manga');
 
@@ -67,34 +66,42 @@ function initialize() {
 	$("#select-kekkai a").click(function(event){
 
 		event.preventDefault();
-			
+
 		var selectedKekkai = $(this).attr('id');
-			
+
 		if (selectedKekkai == 'manga' || selectedKekkai == 'tv' || selectedKekkai == 'movie') {
-				
+
 			clearMarkers();
 			getKekkai(selectedKekkai);
-				
+
 		}  else if (selectedKekkai == 'showall') {
-				
+
 			//this should show all kekkai, not the array that has been selected previously
 			showMarkers();
 		}
-			
-	
-	}
-);
+
+
+	});
 
 	//click on infobox links
 	$('#kekkai-map').on("click",'.more', function(e) {
 		e.preventDefault();
-		
+
 		var more_about = [$(this).attr('class').replace('more ',''),$(this).attr('href')];
-		
+
 		showInfo(more_about[0],more_about[1])
-		
+
 	});
-//este que???	
+
+		//this also is not loading
+		$.getJSON("doe.json", function(data){
+
+			doeObject = data.doe;
+			console.log('object filled wiith '+doeObject);
+
+		});
+
+
 }
 
 /*
@@ -105,127 +112,123 @@ function showInfo(type,name, callback) {
 	$.getJSON("doe.json", function(data){
 		callback();
 	}
-);	
+);
 */
 
 function showInfo(type,name) {
-	console.log(name);
+	//console.log(name);
+
+	//show if hidden
 	if ($('#more-info').is(':hidden')) {
-		$('#more-info').slideDown( "slow");	
-			
+		$('#more-info').slideDown( "slow");
+
 	}
-	
+
+	//close if click on panel
+	$('#more-info').on('click',function(){
+		$('#more-info').slideUp( "slow");
+	});
+
 	var img;
 	var name_japanese;
 	var name_romanji;
-	var information
-	
-	if (type == 'doe') {
-		
-		
-		//this also is not loading
-		$.getJSON("doe.json", function(data){
-		
+	var information;
+	var showThis = [];
 
-			var doeObject = data.doe;
-			console.log('object filled wiith '+doeObject);
-		
-			//variable for each kekkai index in turn
-			//TODO: iterate in function
-		
-			for (var i in data.doe) {
-			
-				if (data.doe[i].name == name ) {
-					name_japanese = data.doe[i].name_japanese;
-					img = '<img class="doe_thumb" src="images/'+data.doe[i].image+'" alt="'+name+'">';
-					information = data.doe[i].information;
-				
-					console.log(data.doe[i].name_japanese);
-				}
+	if (type == 'doe') {
+
+		for (var i in doeObject) {
+
+			if (doeObject[i].name == name ) {
+				name_japanese = doeObject[i].name_japanese;
+				img = '<img class="doe_thumb" src="images/'+doeObject[i].image+'" alt="'+name+'">';
+				information = doeObject[i].information;
+
+				//console.log(name+' - '+name_japanese+' - '+img+' - '+information);
 			}
-		});
-		
-	} else if (type == 'kekkai') {
-		$('#more-info').append(' this is a kekkai');
-		
-		for (var i in kekkaiObject) {
-			
-			if (kekkaiObject[i].name == name ) {
-					img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-					img ='<img class="kekkai_thumb" src="images/'+img+'_m.jpg" alt="'+name+'">';
-				
-					name_japanese = kekkaiObject[i].name_japanese;
-					name_romanji = kekkaiObject[i].name_romanji;
-					information = kekkaiObject[i].information;
-			}
-			
 		}
-		
-		
+
+
+	} else if (type == 'kekkai') {
+
+		for (var i in kekkaiObject) {
+
+			if (kekkaiObject[i].name == name ) {
+				img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
+				img ='<img class="kekkai_thumb" src="images/'+img+'_m.jpg" alt="'+name+'">';
+
+				name_japanese = kekkaiObject[i].name_japanese;
+				name_romanji = kekkaiObject[i].name_romanji;
+				information = kekkaiObject[i].information;
+				//console.log(name+' - '+name_japanese+' - '+img+' - '+information);
+
+			}
+
+		}
+
+
 	}
+
+
+
 	var extend_content = '<div class="extend-pic">'+img+'</div>\
 		<div class="extend-info"><h2>'+name+'</h2>\
 		<h4>'+name_japanese+'</h4>\
 		<p>'+information+'</p></div>';
-		
+
 	$('#more-info').html(extend_content);
-	
-	//console.log('array is '+shownKekkaiIndex);
-	//console.log('object filled wiith '+kekkaiObject);
-	
-	$('#more-info').on('click',function(){
-		$('#more-info').slideUp( "slow");
-	});
-	
+
+
+
 }
 
 function getKekkai(kekkaiSource) {
-	
+
 	console.log('kekkai source is '+kekkaiSource);
-	
+
 	$.getJSON("kekkai.json",function(data){ //funcion con los datos leidos = ultimo parametro
 		//lo de arriba es un callback function, se pone como ultimo parametro
-		
+
 		var shownKekkaiIndex = []; //array to hold kekkai indexes
 		kekkaiObject = data.kekkai;
 		console.log('object filled wiith '+kekkaiObject);
-		
+
 		//variable for each kekkai index in turn
 		//TODO: iterate in function
 		var indexKekkai = 0;
-		
+
 		for (var i in data.kekkai) {
 
 			if (kekkaiSource == 'manga' && data.kekkai[i].manga_is_kekkai == 'Yes') {
-				
+
 				//if this was a kekkai in the manga, add to array
-				
+
 				//console.log(data.kekkai[i].name+' is a kekkai in the manga with ID '+indexKekkai);
 				shownKekkaiIndex.push(indexKekkai);
 				//console.log('new array of kekkai: '+shownKekkaiIndex);
-				
+
 			} else if (kekkaiSource == 'tv' && data.kekkai[i].tv_is_kekkai == 'Yes') {
 				//if this was a kekkai in the tv anime, add to array
 				shownKekkaiIndex.push(indexKekkai);
 			} else if (kekkaiSource == 'movie' && data.kekkai[i].movie_is_kekkai == 'Yes') {
 				//if this was a kekkai in the movie, add to array
 				shownKekkaiIndex.push(indexKekkai);
-			} 
-			
+			}
+
 			indexKekkai++;
-			
+
 			//console.log(name+'/'+name_japanese+': '+latitude+', '+longitude);
-					
+
 		}
-		
+
 		//console.log('FINAL array of kekkai: '+shownKekkaiIndex);
-		
+
 		for (var i in shownKekkaiIndex) {
 			//console.log('index: '+shownKekkaiIndex[i]);
-			
+
 			var thisKekkai = shownKekkaiIndex[i]
 			//console.log('name: '+data.kekkai[shownKekkaiIndex[i]].name);
-			
+
 			var name = data.kekkai[thisKekkai].name;
 			var name_japanese = data.kekkai[thisKekkai].name_japanese;
 			var name_romanji = data.kekkai[thisKekkai].name_romanji;
@@ -237,34 +240,34 @@ function getKekkai(kekkaiSource) {
 			var tv_attacked_by = data.kekkai[thisKekkai].tv_attacked_by;
 			var movie_destroyed = data.kekkai[thisKekkai].movie_destroyed;
 			var movie_attacked_by = data.kekkai[thisKekkai].movie_attacked_by;
-				
-						
+
+
 			var kekkai_information = data.kekkai[thisKekkai].information;
-				
+
 			var infowindowContent = [name];
 			//console.log('mandamos: 1- '+infowindowContent);
 
-			
+
 			//create variable to store html for infowindow
 			var html='';
-			
-				
+
+
 			html = '<div class="infowindow-text" style="float:right;width:250px;"><h3 style="margin:0; padding:0;"><a href="'+name+'" class="more kekkai">'+name+'</a></h3>';
-				
+
 			if ((kekkaiSource == 'manga' && manga_destroyed == 'Yes') || (kekkaiSource == 'tv' && tv_destroyed == 'Yes') || (kekkaiSource == 'movie' && movie_destroyed == 'Yes')) {
 				var destroyed_status = 'and destroyed ';
 			} else {
 				var destroyed_status  = 'but not destroyed ';
 			}
-			
+
 			if (kekkaiSource == 'manga' && manga_attacked_by == undefined) {
 				html += '<p>Has not been attacked.';
 			} else if ((kekkaiSource == 'tv' && tv_attacked_by == undefined) || (kekkaiSource == 'movie' && movie_attacked_by == undefined)){
 				html += '<p>Was never attacked.';
 			} else {
-				
+
 				var attacking_dragons;
-				
+
 				//split array into string
 				if (kekkaiSource == 'manga') {
 					attacking_dragons = manga_attacked_by.split(", ");
@@ -273,23 +276,23 @@ function getKekkai(kekkaiSource) {
 				} else if (kekkaiSource == 'movie') {
 					attacking_dragons = movie_attacked_by.split(", ");
 				}
-				
+
 				//how many values in string
 				var n = attacking_dragons.length;
-					
+
 				//counter
 				var d = 1;
-				
+
 				var doe_pic = '';
-				
+
 				html += '<p>Attacked '+destroyed_status+'by ';
-					
+
 				for (var dragon in attacking_dragons) {
-						
+
 					html += '<a class="more doe" href="'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
 					doe_pic += '<img class="doe_pic" src="images/'+attacking_dragons[dragon].replace(/\s/g, '-').toLowerCase()+'.png" width="40" alt="'+attacking_dragons[dragon]+'" />';
 					console.log(doe_pic);
-						
+
 					if (n > 1 && d < n - 1 ) {
 						//if multiple attackers, and this is not the second to last on the list, add comma
 						html +=', ';
@@ -297,18 +300,18 @@ function getKekkai(kekkaiSource) {
 						//if multiple attackers, and this is the second to last on the list, add 'and'
 						html +=' and ';
 					}
-					
+
 					//update counter
 					d++;
 				}
-				
+
 				html += '.<br />';
 				html += doe_pic;
-				
+
 			}
-				
+
 			html += '</div>';
-			
+
 			if (name == 'Ebisu Garden Place') {
 				var markerIcon=markerFroggie;
 				var markerShape=markerShapeFroggie;
@@ -316,32 +319,32 @@ function getKekkai(kekkaiSource) {
 				var markerIcon=markerDragon;
 				var markerShape=markerShapeDragon;
 			}
-			
-			
-			
+
+
+
 			infowindowContent.push(html);
-			//console.log('mandamos: '+infowindowContent);	
-				
-				
+			//console.log('mandamos: '+infowindowContent);
+
+
 			createMarker(kekkaiMap,new google.maps.LatLng(
 				latitude,
 				longitude),
 				markerIcon,
 				markerShape,
 				infowindowContent);
-				
+
 			//console.log(name+' is a kekkai in the manga!');
-			
+
 		}
-		
+
 	});
-	
+
 }
 
 
 //crea un marker con una burbuja de texto, y una imagen personalizada
 function createMarker(map,point,image,shape,content) {
-	
+
 	//create marker
 	var marker = new google.maps.Marker({
 		position: point,
@@ -349,33 +352,33 @@ function createMarker(map,point,image,shape,content) {
 		icon: image,
 		shape: shape
 	});
-	
-	//push to markers array 
+
+	//push to markers array
 	markers.push(marker);
-	
-	
+
+
 	//create info window, but don't put in any content yet
 	var infowindow = new google.maps.InfoWindow({
 		//content: txt
 	});
-	
+
 	//when marker is clicked, load content and show window
 	google.maps.event.addListener(marker, 'click', function() {
 
 		//prepare content
 		var name = content[0];
 		var text = content[1]
-		
+
 		//imagen bajada anteriormente
 		var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
 		img ='<img class="kekkai_thumb" height="110" width="110" src="images/'+img+'.jpg" alt="'+name+'">';
 
 		//put content together
 		var newContent = img+text;
-		
+
 		//load content into window when marker is clicked NOT before
 		infowindow.setContent(newContent);
-		
+
 		//open window \O/
 		infowindow.open(map,marker);
 
@@ -412,6 +415,5 @@ function deleteMarkers() {
 }
 
 
-	
 
- 
+
