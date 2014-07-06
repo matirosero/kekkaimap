@@ -41,30 +41,7 @@ a:active {
 	height:100%;
 	width:100%;
 }
-#more-info {
--webkit-border-bottom-right-radius: 3px;
--webkit-border-bottom-left-radius: 3px;
--moz-border-radius-bottomright: 3px;
--moz-border-radius-bottomleft: 3px;
-border-bottom-right-radius: 3px;
-border-bottom-left-radius: 3px;
 
-opacity: 0.95;
--moz-opacity: 0.95;
--khtml-opacity: 0.95;
--ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=95);
-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
-filter:alpha(opacity=95);
-
-	background: #444;
-	bottom:-1px;
-	color: #fff;
-	display: none;
-	height:200px;
-	padding: 10px;
-	position: absolute;
-	width:730px;
-}
 #select-kekkai {
 	list-style: none;
 	margin: 1em 0;
@@ -75,22 +52,22 @@ filter:alpha(opacity=95);
 	padding: 3px 0;
 }
 #select-kekkai li a {
-  background: #eeeeee;
-  background-image: -webkit-linear-gradient(top, #eeeeee, #aaaaaa);
-  background-image: -moz-linear-gradient(top, #eeeeee, #aaaaaa);
-  background-image: -ms-linear-gradient(top, #eeeeee, #aaaaaa);
-  background-image: -o-linear-gradient(top, #eeeeee, #aaaaaa);
-  background-image: linear-gradient(to bottom, #eeeeee, #aaaaaa);
-  -webkit-border-radius: 20;
-  -moz-border-radius: 20;
-  border-radius: 20px;
-  display: block;
-  font-family: 'bebas_neueregular', sans-serif;
+  	background: #eeeeee;
+  	background-image: -webkit-linear-gradient(top, #eeeeee, #aaaaaa);
+  	background-image: -moz-linear-gradient(top, #eeeeee, #aaaaaa);
+  	background-image: -ms-linear-gradient(top, #eeeeee, #aaaaaa);
+  	background-image: -o-linear-gradient(top, #eeeeee, #aaaaaa);
+  	background-image: linear-gradient(to bottom, #eeeeee, #aaaaaa);
+  	-webkit-border-radius: 20;
+  	-moz-border-radius: 20;
+  	border-radius: 20px;
+  	display: block;
+  	font-family: 'bebas_neueregular', sans-serif;
 	font-weight: normal;
-  font-size: 18px;
-  color: #ffffff;
-  padding: 10px 0px;
-  text-decoration: none;
+	font-size: 18px;
+	color: #ffffff;
+	padding: 10px 0px;
+	text-decoration: none;
 
 	text-align: center;
 	width: 190px;
@@ -98,26 +75,81 @@ filter:alpha(opacity=95);
 #select-kekkai li a:hover,
 #select-kekkai li a:focus,
 #select-kekkai li a:active {
-  background: #76a5de;
-  background-image: -webkit-linear-gradient(top, #76a5de, #3858b5);
-  background-image: -moz-linear-gradient(top, #76a5de, #3858b5);
-  background-image: -ms-linear-gradient(top, #76a5de, #3858b5);
-  background-image: -o-linear-gradient(top, #76a5de, #3858b5);
-  background-image: linear-gradient(to bottom, #76a5de, #3858b5);
-  text-decoration: none;
+ 	background: #76a5de;
+ 	background-image: -webkit-linear-gradient(top, #76a5de, #3858b5);
+ 	background-image: -moz-linear-gradient(top, #76a5de, #3858b5);
+ 	background-image: -ms-linear-gradient(top, #76a5de, #3858b5);
+ 	background-image: -o-linear-gradient(top, #76a5de, #3858b5);
+ 	background-image: linear-gradient(to bottom, #76a5de, #3858b5);
+ 	text-decoration: none;
 }
 .infowindow-text p {
 	margin:0;
 }
-.doe_pic {
+
+
+
+#more-info {
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+
+	opacity: 0.95;
+	-moz-opacity: 0.95;
+	-khtml-opacity: 0.95;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=95);
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
+	filter:alpha(opacity=95);
+
+	background: #444;
+	bottom:-1px;
+	color: #fff;
+	display: none;
+	height:auto;
+	padding: 15px;
+	position: absolute;
+	width:720px;
+}
+.kekkai-thumb {
+	float:left;
+	margin:0 1em 0 0;
+}
+
+.doe-smallpic {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	margin:1em 1em 0 0;
+	margin: 1em 1em 0 0;
 }
-.kekkai_thumb {
-	float:left;
-	margin:0 1em 0 0; 
+
+
+.extend-pic {
+	float: left;
+	margin:5px 15px 0 0;
+}
+.kekkai .extend-pic {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	width:240px;
+}
+.doe .extend-pic {
+	width: 81px;
+}
+
+.extend-info {
+	float:right;
+}
+
+.doe .extend-info {
+	width: 624px;
+}
+
+.kekkai .extend-info {
+	width: 465px;
 }
 
 

@@ -141,7 +141,7 @@ function showInfo(type,name) {
 
 			if (doeObject[i].name == name ) {
 				name_japanese = doeObject[i].name_japanese;
-				img = '<img class="doe_thumb" src="images/'+doeObject[i].image+'" alt="'+name+'">';
+				img = '<img src="images/'+doeObject[i].image+'" alt="'+name+'">';
 				information = doeObject[i].information;
 
 				//console.log(name+' - '+name_japanese+' - '+img+' - '+information);
@@ -155,7 +155,7 @@ function showInfo(type,name) {
 
 			if (kekkaiObject[i].name == name ) {
 				img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-				img ='<img class="kekkai_thumb" src="images/'+img+'_m.jpg" alt="'+name+'">';
+				img ='<img src="images/'+img+'_m.jpg" alt="'+name+'">';
 
 				name_japanese = kekkaiObject[i].name_japanese;
 				name_romanji = kekkaiObject[i].name_romanji;
@@ -174,7 +174,13 @@ function showInfo(type,name) {
 		<h4>'+name_japanese+'</h4>\
 		<p>'+information+'</p></div>';
 
-	$('#more-info').html(extend_content);
+	if ($('#more-info').addClass() != type) {
+		$('#more-info').removeClass().addClass(type).html(extend_content);
+	} else {
+		$('#more-info').addClass(type).html(extend_content);
+	}
+
+
 
 }
 
@@ -287,7 +293,7 @@ function getKekkai(kekkaiSource) {
 				for (var dragon in attacking_dragons) {
 
 					html += '<a class="more doe" href="'+attacking_dragons[dragon]+'">'+attacking_dragons[dragon]+'</a>';
-					doe_pic += '<img class="doe_pic" src="images/'+attacking_dragons[dragon].replace(/\s/g, '-').toLowerCase()+'.png" width="40" alt="'+attacking_dragons[dragon]+'" />';
+					doe_pic += '<a class="more doe" href="'+attacking_dragons[dragon]+'"><img class="doe-smallpic" src="images/'+attacking_dragons[dragon].replace(/\s/g, '-').toLowerCase()+'.png" width="40" alt="'+attacking_dragons[dragon]+'" /></a>';
 					console.log(doe_pic);
 
 					if (n > 1 && d < n - 1 ) {
@@ -368,7 +374,7 @@ function createMarker(map,point,image,shape,content) {
 
 		//imagen bajada anteriormente
 		var img = name.replace(/\s/g, '').replace('/', '-').toLowerCase();
-		img ='<img class="kekkai_thumb" height="110" width="110" src="images/'+img+'.jpg" alt="'+name+'">';
+		img ='<img class="kekkai-thumb" height="110" width="110" src="images/'+img+'.jpg" alt="'+name+'">';
 
 		//put content together
 		var newContent = img+text;
